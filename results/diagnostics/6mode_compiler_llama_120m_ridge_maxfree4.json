@@ -1,0 +1,262 @@
+{
+  "checkpoint": "/mnt/mldata/checkpoints/execution_graph_transformers/llama_120m_6mode_gradnorm/ckpts/step003500.safetensors",
+  "hardware": "cuda",
+  "max_free": 4,
+  "cost_source": "ridge",
+  "n_layers": 12,
+  "baseline_ms": 14.505888529432317,
+  "seq_bpb": 1.219322053850805,
+  "latency_costs": [
+    {
+      "parallel": 0.5321562678242717,
+      "skip": -0.5910122611870374,
+      "reverse": 1.1071725360428282,
+      "attn_only": -0.10892273082087556,
+      "ffn_only": 0.5905503407120705
+    },
+    {
+      "parallel": 0.6009883402536307,
+      "skip": -0.5913161983092632,
+      "reverse": 1.128411199897526,
+      "attn_only": -0.06820466369390665,
+      "ffn_only": 0.6175296070675049
+    },
+    {
+      "parallel": 0.6109082760910187,
+      "skip": -0.5727015978967156,
+      "reverse": 1.1401605404292532,
+      "attn_only": -0.05339199366668801,
+      "ffn_only": 0.6319822665924821
+    },
+    {
+      "parallel": 0.6426482694223523,
+      "skip": -0.5445388611406088,
+      "reverse": 1.188538533945879,
+      "attn_only": -0.020555329198639782,
+      "ffn_only": 0.6771769995490704
+    },
+    {
+      "parallel": 0.676283667174479,
+      "skip": -0.5158355304350462,
+      "reverse": 1.210681938876709,
+      "attn_only": 0.002732733264565468,
+      "ffn_only": 0.6896823334197197
+    },
+    {
+      "parallel": 0.6999916707475968,
+      "skip": -0.4983728596319761,
+      "reverse": 1.2274558655917662,
+      "attn_only": 0.02409807251145324,
+      "ffn_only": 0.6997349982460328
+    },
+    {
+      "parallel": 0.6964716672276445,
+      "skip": -0.4914975259453076,
+      "reverse": 1.2348606018349528,
+      "attn_only": 0.03313133493065834,
+      "ffn_only": 0.722946335251132
+    },
+    {
+      "parallel": 0.7259636729334797,
+      "skip": -0.46925412801404853,
+      "reverse": 1.2600699362034593,
+      "attn_only": 0.04171733744442285,
+      "ffn_only": 0.7418923390408345
+    },
+    {
+      "parallel": 0.7415190028647576,
+      "skip": -0.44050752961387296,
+      "reverse": 1.295445269594591,
+      "attn_only": 0.07666340097784996,
+      "ffn_only": 0.7340343358616028
+    },
+    {
+      "parallel": 0.735376332886517,
+      "skip": -0.4464981301377211,
+      "reverse": 1.2721799391632267,
+      "attn_only": 0.06052267272025347,
+      "ffn_only": 0.7466503418982029
+    },
+    {
+      "parallel": 0.7648023388658949,
+      "skip": -0.4347307995582632,
+      "reverse": 1.29925193420301,
+      "attn_only": 0.09105273832877359,
+      "ffn_only": 0.7767356699332595
+    },
+    {
+      "parallel": 0.7812336708108578,
+      "skip": -0.41698286465058665,
+      "reverse": 1.3177533323566113,
+      "attn_only": 0.10955673642456354,
+      "ffn_only": 0.7958877366036177
+    }
+  ],
+  "compiled": [
+    {
+      "budget": 0.0,
+      "mask": [
+        "sequential",
+        "attn_only",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential"
+      ],
+      "mode_counts": {
+        "sequential": 11,
+        "parallel": 0,
+        "skip": 0,
+        "reverse": 0,
+        "attn_only": 1,
+        "ffn_only": 0
+      },
+      "predicted_cost": -0.0048851107187227825,
+      "predicted_benefit_ms": 0.06820466369390665,
+      "actual_bpb": 1.2246170695115097,
+      "actual_bpb_degradation": 0.005295015660704783,
+      "actual_latency_ms": 14.559832533511024,
+      "actual_speedup": 0.996295012050822,
+      "argmax_agreement": 0.92138671875,
+      "symmetric_kl": 14.020204544067383
+    },
+    {
+      "budget": 0.0005,
+      "mask": [
+        "sequential",
+        "attn_only",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential"
+      ],
+      "mode_counts": {
+        "sequential": 11,
+        "parallel": 0,
+        "skip": 0,
+        "reverse": 0,
+        "attn_only": 1,
+        "ffn_only": 0
+      },
+      "predicted_cost": -0.0048851107187227825,
+      "predicted_benefit_ms": 0.06820466369390665,
+      "actual_bpb": 1.2246170695115097,
+      "actual_bpb_degradation": 0.005295015660704783,
+      "actual_latency_ms": 14.600945931548873,
+      "actual_speedup": 0.9934896408381897,
+      "argmax_agreement": 0.92138671875,
+      "symmetric_kl": 14.020204544067383
+    },
+    {
+      "budget": 0.002,
+      "mask": [
+        "attn_only",
+        "attn_only",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential"
+      ],
+      "mode_counts": {
+        "sequential": 10,
+        "parallel": 0,
+        "skip": 0,
+        "reverse": 0,
+        "attn_only": 2,
+        "ffn_only": 0
+      },
+      "predicted_cost": 0.000898512957203672,
+      "predicted_benefit_ms": 0.1771273945147822,
+      "actual_bpb": 1.2474061092903683,
+      "actual_bpb_degradation": 0.028084055439563382,
+      "actual_latency_ms": 13.941314265442392,
+      "actual_speedup": 1.04049648786624,
+      "argmax_agreement": 0.84521484375,
+      "symmetric_kl": 76.60054016113281
+    },
+    {
+      "budget": 0.005,
+      "mask": [
+        "sequential",
+        "attn_only",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "skip",
+        "sequential"
+      ],
+      "mode_counts": {
+        "sequential": 10,
+        "parallel": 0,
+        "skip": 1,
+        "reverse": 0,
+        "attn_only": 1,
+        "ffn_only": 0
+      },
+      "predicted_cost": 0.0045127822278034115,
+      "predicted_benefit_ms": 0.5029354632521699,
+      "actual_bpb": 1.2245799931007515,
+      "actual_bpb_degradation": 0.005257939249946553,
+      "actual_latency_ms": 13.43989740125835,
+      "actual_speedup": 1.0793154215652094,
+      "argmax_agreement": 0.91845703125,
+      "symmetric_kl": 16.676437377929688
+    },
+    {
+      "budget": 0.02,
+      "mask": [
+        "attn_only",
+        "attn_only",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "sequential",
+        "skip",
+        "skip"
+      ],
+      "mode_counts": {
+        "sequential": 8,
+        "parallel": 0,
+        "skip": 2,
+        "reverse": 0,
+        "attn_only": 2,
+        "ffn_only": 0
+      },
+      "predicted_cost": 0.019299395175082723,
+      "predicted_benefit_ms": 1.028841058723632,
+      "actual_bpb": 1.2482346127668804,
+      "actual_bpb_degradation": 0.02891255891607547,
+      "actual_latency_ms": 11.527982532667618,
+      "actual_speedup": 1.2583197873804897,
+      "argmax_agreement": 0.822265625,
+      "symmetric_kl": 85.13546752929688
+    }
+  ]
+}
