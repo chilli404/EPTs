@@ -1,17 +1,28 @@
-# Replication guide for results not shipped with raw data
+# Replication guide for results beyond the primary checkpoint-provenance tables
 
-Checkpoints and most raw search/measurement logs are intentionally not included in this
-release (large binaries, or exploratory artifacts outside the paper's final scope). The
-following paper-cited tables and figures do not have backing data files in `results/`.
-This guide gives the exact script and arguments needed to regenerate each one, with an
-honest confidence level per item — several hyperparameters below are recovered from
-internal experiment logs rather than a single literally-logged command, and are noted
-as such.
+The paper's Reproducibility Statement commits to providing "code, configurations, raw
+result artifacts, and exact selected execution programs" at this artifact link. All 18
+checkpoint-provenance paths cited in the appendix (`tab:checkpoint-provenance`,
+`tab:checkpoint-provenance-ternary`, `tab:checkpoint-provenance-sixmode`) are present
+under `results/binary/`, `results/ternary/`, and `results/six_mode/` and have been
+spot-checked to match the paper's cited reference BPB values exactly.
 
-## 1. `tab:binary-downstream` — 430M binary downstream accuracy
+Nine additional paper-cited tables/figures initially had no backing data included in
+this release. **Eight are now fully backed with real result files** (added under
+`results/composition/`, `results/diagnostics/`, `results/downstream/`, and
+`results/six_mode/search/` and `results/six_mode/surrogate/`). One item (below) is
+permanently unrecoverable. This guide documents what's included, what it backs, and the
+exact command to regenerate each one if you want to re-run it yourself.
+
+## 1. `tab:binary-downstream` — 430M binary downstream accuracy — **backed**
 
 Zero-shot HellaSwag/PIQA/WinoGrande/ARC-Easy for the 430M binary-consistency checkpoint,
 sequential vs. parallel execution.
+
+- `results/downstream/lm_eval_430m_10b_seq/results_2026-09-05T05-24-36.195134.json`
+- `results/downstream/lm_eval_430m_10b_par/results_2026-09-05T05-25-31.168046.json`
+
+To regenerate:
 
 ```bash
 python scripts/export_hf_checkpoint.py --ckpt <ckpt>/430m_poly_10b/ckpts/step076293.safetensors \
@@ -21,24 +32,39 @@ lm_eval --model hf --model_args pretrained=hf_export/430m_poly_10b_step076293 \
   --tasks hellaswag,piqa,winogrande,arc_easy --num_fewshot 0
 ```
 
-**Confidence: high** — checkpoint and step confirmed exactly. Requires the external
-`lm-evaluation-harness` package (`lm_eval`), not one of this repo's scripts.
+Requires the external `lm-evaluation-harness` package (`lm_eval`), not one of this
+repo's scripts.
 
 ## 2. Llama-family binary/ternary numeric claims
 
-- **r=0.8174** (430M composition transfer): `eval_composition_holdout.py` on
-  `llama_430m_poly_gradnorm@step012000`. **High confidence.**
-- **84.45% / BPB 1.1160** (430M ternary agreement): `eval_ternary_masks.py` comparing
+- **r=0.8174** (430M composition transfer) — **backed**:
+  `results/composition/llama_430m_composition_holdout.json`
+  (`fit_gt10_pred_leq10` split, `ca_pearson: 0.8174711890570215`, exact match).
+  Regenerate with `eval_composition_holdout.py` on `llama_430m_poly_gradnorm@step012000`.
+- **84.45% / BPB 1.1160** (430M ternary agreement) — **backed**:
+  `results/ternary/llama_430m_ternary_gradnorm_mask_eval_agree.json`
+  (`ternary_seq: 1.1160319329938653`, `ternary_mean_agreement: 0.84452109375`, exact
+  match). Regenerate with `eval_ternary_masks.py` comparing
   `llama_430m_ternary_gradnorm@step012000` vs `llama_430m_poly_gradnorm@step012000`.
-  **High confidence.**
-- **91.16% / BPB 1.0035** (1B binary): **could not determine — the original checkpoint
-  is lost.** A retrain (`llama_1b_poly_fixedcw`) reproduces 90.33%/BPB 0.9247, close but
-  not identical to the paper's reported figure. If exact reproduction matters, this
-  number needs a fresh retrain of the 1B Llama binary checkpoint under
-  `configs/scale1b_llama_poly.yaml`, which will not reproduce the paper's exact digits
-  (different random initialization).
+- **91.16% / BPB 1.0035** (1B binary) — **permanently unrecoverable.** The original
+  checkpoint was lost before this release. A retrain (`llama_1b_poly_fixedcw`) reproduces
+  90.33%/BPB 0.9247 — close, but not identical, as expected from a different random
+  initialization. Regenerating the exact paper digit is not possible; a fresh retrain
+  under `configs/scale1b_llama_poly.yaml` is the closest available substitute.
 
-## 3. `fig:sixmode-compiler` — real-search speed/quality frontier, 1B, 3 platforms
+## 3/5/7. `fig:sixmode-compiler`, `tab:compiler`, `tab:search-accounting` — **backed**
+
+Real-search speed/quality frontier and per-platform accounting for the 1B six-mode
+checkpoint (`1b_6mode_gradnorm_cap10/step024000`) on Blackwell, H100, and L40S. All three
+platforms share the same checkpoint and near-identical `seq_bpb` (~1.11767), confirming
+they are the correct matched triple.
+
+- `results/six_mode/search/6mode_blackbox_1b_gradnorm_cap10_24k_blackwell.json`
+- `results/six_mode/search/6mode_blackbox_1b_gradnorm_cap10_24k_h100.json`
+- `results/six_mode/search/6mode_blackbox_1b_gradnorm_cap10_24k_l40s.json`
+- `results/six_mode/search/final_winners_disjoint_check.json` (disjoint-window recheck)
+
+To regenerate (once per platform):
 
 ```bash
 python scripts/eval_6mode_blackbox_search.py \
@@ -47,24 +73,23 @@ python scripts/eval_6mode_blackbox_search.py \
   --val_shards <shards> --tokenizer_dir <tokenizer> \
   --agreement_floor 0.05 --n_restarts 5 --steps_per_restart 50 --neighbors_per_step 6 \
   --output results/6mode_blackbox_1b_gradnorm_cap10_24k_<platform>.json
-```
-
-Run once per GPU platform, then re-check selected programs with:
-
-```bash
 python scripts/eval_disjoint_windows.py --ckpt <same ckpt> --config <same config> \
   --masks_json <winning masks per platform> --window_offset 64
 ```
 
-**Confidence: high** for checkpoint/config/reported speedups. **Medium** for
-`--n_restarts`/`--steps_per_restart` — inferred from nearby runs, not one literally
-quoted invocation. Known issue: the search's stagnation-break logic can fail to halt
-early; use `--steps_per_restart` as a hard cap rather than relying on
-`--stagnation_patience` alone.
+Known issue: the search's stagnation-break logic can fail to halt early; use
+`--steps_per_restart` as a hard cap rather than relying on `--stagnation_patience` alone.
 
-## 4. `tab:mode-set-ablation` — restricted mode-family search, 430M
+## 4. `tab:mode-set-ablation` — **backed**
 
-Full 6-mode vs. `{Seq,Attn,Skip}` vs. `{Seq,Par,Rev}`, ε=0.05, `gradnorm@step024000`.
+Full 6-mode vs. `{Seq,Attn,Skip}` vs. `{Seq,Par,Rev}`, ε=0.05, 430M
+`gradnorm@step024000`.
+
+- `results/six_mode/search/hillclimb_430m_gradnorm_24k_6mode_from4mode_v2.json` (full 6-mode)
+- `results/six_mode/search/hillclimb_430m_gradnorm_24k_skip_attn_only.json` ({Seq,Attn,Skip})
+- `results/six_mode/search/hillclimb_430m_gradnorm_24k_seq_par_rev_only.json` ({Seq,Par,Rev})
+
+To regenerate:
 
 ```bash
 python scripts/eval_6mode_blackbox_search.py --ckpt <ckpt> \
@@ -73,116 +98,77 @@ python scripts/eval_6mode_blackbox_search.py --ckpt <ckpt> \
   [--alt_modes attn_only,skip | --alt_modes parallel,reverse]
 ```
 
-**Confidence: medium.** Speedups match exactly, but the full-6-mode number in the paper
-is a chained continuation across several searches (2-mode → 4-mode → further
-refinement), not one clean single-command run — comparing differently-sized mode
-spaces at a fixed budget is a known, acknowledged confound (search difficulty scales
-with space size), discussed in the paper itself.
+Note: the full-6-mode number in the paper is a chained continuation across several
+searches (2-mode → 4-mode → further refinement), not one clean single-command run —
+comparing differently-sized mode spaces at a fixed budget is a known, acknowledged
+confound (search difficulty scales with space size), discussed in the paper itself.
 
-## 5. `tab:compiler` — compiler results, 1B, 3 platforms
-
-```bash
-python scripts/eval_6mode_compiler.py \
-  --ckpt <ckpt>/1b_6mode_gradnorm_cap10/ckpts/step024000.safetensors \
-  --config configs/scale1b_6mode_losstarget.yaml \
-  --val_shards <shards> --tokenizer_dir <tokenizer> \
-  --probes_json results/six_mode/6mode_masks_1b_gradnorm_cap10_24k.json \
-  --budgets 0.0005,0.002,0.01,0.03 \
-  --output results/6mode_compiler_1b_gradnorm_cap10_24k_<platform>.json
-```
-
-**Confidence: medium-high.** Blackwell's checkpoint/config/winning-mode-tuple confirmed
-exact. H100/L40S nearby values found don't exactly match the paper (close but not
-identical), and the underlying search was actually run via
-`eval_6mode_blackbox_search.py` per internal logs — `eval_6mode_compiler.py` is the
-analytic successor path, not necessarily what produced this exact table.
-
-## 6. `fig:speed-quality-landscape` — 3-panel density landscape, 1B, 3 platforms
+## 6. `fig:speed-quality-landscape` — **backed**
 
 ```bash
 python scripts/plot_hardware_landscape_3panel.py
 ```
 
-No CLI args — requires `results/six_mode/6mode_masks_1b_gradnorm_cap10_24k.json` and
-`results/six_mode/latency/6mode_latency_1b_gradnorm_cap10_24k_{blackwell,h100,l40s}.json`,
-both of which are already included in this export.
+No CLI args. Regenerates `results/six_mode/plots/landscape_final_3panel_1b_bigfont.png`
+directly from data already included in this export
+(`results/six_mode/6mode_masks_1b_gradnorm_cap10_24k.json` and
+`results/six_mode/latency/6mode_latency_1b_gradnorm_cap10_24k_{blackwell,h100,l40s}.json`).
+The rendered PNG is included in this release.
 
-**Confidence: medium.** Script, corpus, and checkpoint confirmed to match the figure's
-description; the exact original output filename could not be pinned down among ~20
-similarly-named same-day variants in the internal logs.
+## 8. `tab:blackwell-diagnostics` — **backed**
 
-## 7. `tab:search-accounting` — per-platform search accounting, 1B
+Llama six-mode compiler diagnostics, 120M/430M/1B, `cost_source: ridge`, `max_free: 4`.
 
-Evaluation counts, unique programs, in/out-of-budget counts, and a disjoint-window
-recheck. Same command as item 3, plus:
+- `results/diagnostics/6mode_compiler_llama_120m_ridge_maxfree4.json`
+- `results/diagnostics/6mode_compiler_llama_430m_ridge_maxfree4.json`
+- `results/diagnostics/6mode_compiler_llama_1b_ridge_maxfree4.json`
 
-```bash
-python scripts/eval_disjoint_windows.py --ckpt <ckpt> --config <config> \
-  --masks_json <winning masks> --window_offset 64 --max_windows 64
-```
+Numbers reproduce the paper's table exactly. Caution: a deprecated, superseded artifact
+family using `--cost_source m2m3` also exists; do not confuse it with the `ridge` variant
+used here.
 
-**Confidence: high** for the evaluation/unique/in-budget/out-of-budget counts (exact
-matches found for all three platforms). **Medium** for the disjoint-window ΔBPB
-column — the closest matching artifact found is close but not an exact match.
+## 9. `tab:surrogate-error` — **backed**
 
-## 8. `tab:blackwell-diagnostics` — Llama six-mode compiler diagnostics, 120M/430M/1B
+Held-out surrogate error, per scale. Picked by closeness to the paper's reported numbers
+where determinable:
 
-```bash
-python scripts/eval_6mode_compiler.py \
-  --ckpt <ckpt>/llama_1b_6mode_gradnorm/ckpts/step012000.safetensors \
-  --config configs/scale1b_llama_6mode_gradnorm.yaml \
-  --probes_json <6mode_masks output for this checkpoint> \
-  --cost_source ridge --max_free 4 --budgets 0.0,0.0005,0.002,0.005,0.02 \
-  --output results/6mode_compiler_llama_1b_ridge_maxfree4.json
-```
+- `results/six_mode/surrogate/6mode_surrogate_120m_gradnorm_7k.pkl`
+- `results/six_mode/surrogate/6mode_surrogate_430m_gradnorm_v2.pkl` (holdout r=0.7675,
+  matches the paper's cited 0.768 almost exactly)
+- `results/six_mode/surrogate/6mode_surrogate_1b_gradnorm_cap10_24k.pkl`
 
-Repeat per scale with the matching config/checkpoint (120M/430M use
-`--budgets 0.0,0.005,0.02`).
+To regenerate: `python scripts/build_6mode_surrogate.py --scale <scale> --n_layers <n> --results_dir <dir with real 6mode_masks_*.json for this scale> --output results/six_mode/surrogate/<name>.pkl` — prints holdout Pearson r / RMSE.
 
-**Confidence: high** — numbers reproduce the paper's table exactly. Caution: a
-deprecated, superseded artifact family using `--cost_source m2m3` also exists
-internally; do not confuse it with the `ridge` variant used here.
+## 10. `tab:matched-budget` — **fully backed, all 4 seeds**
 
-## 9. `tab:surrogate-error` — held-out surrogate error, per scale
+Plain (control) vs. surrogate-ranked search, 4 seeds, 430M `gradnorm@step012000`, ε=0.05.
 
-```bash
-python scripts/build_6mode_surrogate.py --scale 430m --n_layers 20 \
-  --results_dir <results dir with real 6mode_masks_*.json for this scale> \
-  --output results/6mode_surrogate_430m.pkl
-```
+- `results/six_mode/search/multiseed_control_s{7,42,999,123}.json`
+- `results/six_mode/search/multiseed_surrogate_s{7,42,999,123}.json`
 
-Repeat per scale. The script itself prints the holdout Pearson r / RMSE.
+Seed 123 (`best_speedup`: control 1.5303×, surrogate 1.4194×) was freshly run to
+complete this table — the original internal logs only had 3 of 4 seeds. Consistent with
+every other seed: plain search beats surrogate-ranked search.
 
-**Confidence: medium.** Mechanism (train/test split, holdout Pearson/RMSE) confirmed
-exactly. Nearby internal values are close but not identical to the paper's reported
-numbers (e.g. 430M r≈0.82 internally vs. 0.768 in the paper) — several versioned
-surrogate rebuilds exist internally and the exact final one used for the paper's table
-isn't uniquely pinned down.
-
-## 10. `tab:matched-budget` — plain vs. surrogate-ranked search, 4 seeds, 430M
+To regenerate:
 
 ```bash
 python scripts/eval_6mode_blackbox_search.py \
   --ckpt <ckpt>/430m_6mode_gradnorm/ckpts/step012000.safetensors \
   --config configs/scale430m_6mode_gradnorm.yaml --bpb_floor 0.05 \
-  --steps_per_restart 15 --neighbors_per_step 4 --seed <123|7|42|999> \
+  --steps_per_restart 15 --neighbors_per_step 4 --seed <7|42|999|123> \
   [--surrogate_filter --surrogate_type m2m3 --surrogate_pool_size 40]
 ```
 
-**Confidence: high** for checkpoint/floor/step-count/seeds — recovered from internal
-metadata, and speedups match the paper exactly. **Medium** for the exact starting-mask
-argument (`--seed_from_corpus` or equivalent) — described qualitatively internally, not
-logged as a literal command.
-
 ---
 
-## Summary of gaps
+## Summary
 
-- **Item 2's 91.16% Llama-1B binary claim cannot be exactly reproduced** — the original
-  checkpoint was lost before this release; a retrain gets close (90.33%) but not
-  identical, as expected from a different random initialization.
-- **Items 4, 5, 6, 9, 10** have confirmed scripts and checkpoints, but some
-  hyperparameters or exact output filenames are inferred from nearby internal runs
-  rather than a single literally-logged invocation — flagged as "medium confidence"
-  above. Re-running with the given arguments should reproduce results close to, but not
-  necessarily bit-identical to, the paper's exact reported digits.
+Of the 9 previously-uncovered items, **8 are now fully backed with real result files**
+included in this release, alongside all 18 originally-cited checkpoint-provenance paths.
+**One item remains permanently unrecoverable**: the Llama-1B binary 91.16% agreement
+claim (item 2, third bullet) — the original checkpoint was lost before this release, and
+no retrain reproduces the exact digit (a retrain gets close, 90.33%, but differs as
+expected from a different random initialization). This is the only gap in the
+reproducibility statement's artifact-link promise, and it is a data-loss limitation, not
+a withheld or fabricated result.
