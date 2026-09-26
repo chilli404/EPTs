@@ -61,6 +61,9 @@ def main():
         archive = json.load(open(args.archive))
         entries = archive["entries"]
         floor = args.select_bpb_floor if args.select_bpb_floor is not None else archive["bpb_floor"]
+        if floor is None:
+            raise ValueError("--select_bpb_floor required: the archive was built without --bpb_floor, "
+                             "so there is no default quality budget to select against")
         feasible = [e for e in entries if e["bpb_degradation"] is not None and e["bpb_degradation"] <= floor
                     and e.get("latency_ms") is not None]
         if not feasible:

@@ -2,21 +2,21 @@
 
 ## Headline results
 
-| Scale | Agreement | Sym KL | ΔBPB | Architecture |
-|-------|-----------|--------|------|--------------|
-| 120M | 95.4% | 5.86 | 0.0014 | Primary |
-| 430M | 96.5% | 4.68 | 0.0016 | Primary |
-| 1B | 96.1% | 4.10 | 0.0012 | Primary |
-| 3B (gradnorm) | 98.3% | 0.92 | 0.0012 | Primary |
-| 7B | 95.6% | 3.78 | 0.0017 | Primary |
-| 430M | 93.6% | 10.4 | 0.003 | Llama |
-| 1B | 91.2% | 26.1 | 0.002 | Llama |
+Binary (sequential/parallel) paired-consistency evidence, from `tab:binary-evidence`:
 
-- **Specialist collapse:** 430M specialist gets 54% agreement (KL=1273) under graph switch. Polymorphic model: 96.5% (KL=4.68).
-- **Composition law:** single-layer defects predict 10k+ held-out mixed DAGs with Pearson 0.97 (primary) and 0.85 (Llama). Calibrated compiler reduces budget violations from 33–47% to <1%.
-- **Hardware compilation:** L40S 1.20–1.54×, Apple M4 1.14×, 7B TP=2 1.20× from communication overlap.
-- **Downstream parity:** 7B lm-eval (HellaSwag, PIQA, WinoGrande, ARC) — all execution graphs within 1 stderr.
-- **Loss analysis:** MSE and KL both achieve graph consistency. KL gradients are 10–58× larger than LM gradients; gradient-normalized weighting resolves scale sensitivity.
+| Scale | Training | Agreement | ΔBPB |
+|-------|----------|-----------|------|
+| 120M | Sequential specialist (no consistency) | 37.11% | 0.5437 |
+| 120M | Paired consistency (fixed λ=1) | 90.53% | 0.001 |
+| 430M | Paired consistency (fixed λ=.1, stop-grad, 10B tok) | 92.24% | 0.00019 |
+| 1B | Paired consistency (fixed λ=1, 197M tok) | 96.14% | 0.00120 |
+| 3B | Paired consistency (GradNorm ρ=.2, 98M tok) | 98.10% | 0.00124 |
+| 7B | Paired consistency (fixed λ=.1, stop-grad, 98M tok) | 95.56% | 0.00174 |
+
+- **Specialist collapse:** the 120M sequential specialist (no consistency training) drops to 37.11% agreement (ΔBPB 0.5437) when forced to run under the parallel graph. Paired-consistency training at the same scale recovers 90.53% agreement at ΔBPB 0.001.
+- **Composition law:** single-layer defects predict held-out mixed DAGs; the calibrated compiler narrows — but does not eliminate — budget violations. On disjoint validation windows, selected programs cost 0.0503–0.0516 BPB, slightly above the nominal 0.05 threshold (`tab:search-accounting`).
+- **Hardware compilation:** one 1B six-mode checkpoint reaches 1.57–1.71× prefill speedup across Blackwell, H100, and L40S, near +0.05 BPB, using a different measured program on each GPU.
+- **Downstream parity:** 7B lm-eval (HellaSwag, PIQA, WinoGrande, ARC) results are reported in the paper's downstream table.
 
 ## Result artifacts (`results/`)
 

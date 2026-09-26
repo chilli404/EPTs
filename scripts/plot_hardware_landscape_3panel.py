@@ -10,6 +10,7 @@ Usage:
   python scripts/plot_hardware_landscape_3panel.py
 """
 import json
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -100,6 +101,7 @@ for i, (platform, bench_path) in enumerate(BENCH_FILES.items()):
 fig.suptitle("Speed/accuracy landscape across hardware, 1B primary",
              fontsize=FONT_TITLE + 2, y=1.02)
 fig.tight_layout()
+Path("results/six_mode/plots").mkdir(parents=True, exist_ok=True)
 fig.savefig("results/six_mode/plots/landscape_final_3panel_1b_bigfont.png",
            dpi=200, bbox_inches="tight")
 print("saved results/six_mode/plots/landscape_final_3panel_1b_bigfont.png")
