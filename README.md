@@ -37,7 +37,7 @@ results/                    Curated result artifacts referenced by the paper
 tests/                       Unit tests
 ```
 
-See `docs/RESULTS_AND_EVALS.md` for a full breakdown of what each script produces and `docs/TERNARY_WRITEUP.md` / `docs/learning_guide.html` for methodology writeups.
+See `docs/RESULTS_AND_EVALS.md` for a full breakdown of what each script produces, `docs/TERNARY_WRITEUP.md` / `docs/learning_guide.html` for methodology writeups, and `docs/REPLICATION.md` for exact commands to regenerate paper-cited results that aren't shipped with raw data in this release.
 
 ## Training objective
 
