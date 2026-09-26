@@ -1,0 +1,39 @@
+run_name: mps_m4max_compiled
+description: >
+  Hardware-specific execution graph compiled for Apple M4 Max (MPS backend).
+  Selected by the defect-budget graph compiler using measured per-layer
+  latency savings on this hardware. The compiled graph outperforms both
+  all-sequential (1.14x speedup) and all-parallel (1.08x speedup) at B=1 T=512.
+
+model:
+  vocab_size: 8192
+  n_layer: 12
+  d_model: 704
+  n_head: 8
+  ctx_len: 1024
+  execution_mode:
+    - sequential  # layer 0: parallel is 0.7ms SLOWER on MPS
+    - parallel    # layer 1: parallel is 1.1ms faster (biggest win)
+    - parallel    # layer 2: parallel is 0.09ms faster
+    - sequential  # layer 3: parallel is 0.09ms slower
+    - parallel    # layer 4: parallel is 0.11ms faster
+    - sequential  # layer 5: parallel is 0.03ms slower
+    - parallel    # layer 6: parallel is 0.13ms faster
+    - sequential  # layer 7: parallel is 0.04ms slower
+    - parallel    # layer 8: parallel is 0.17ms faster
+    - sequential  # layer 9: parallel is 0.12ms slower
+    - parallel    # layer 10: parallel is 0.04ms faster
+    - parallel    # layer 11: parallel is 0.02ms faster
+
+hardware:
+  chip: Apple M4 Max
+  backend: mps
+  pytorch: "2.8.0"
+
+compiler:
+  composition_scale: 0.7149
+  predicted_kl: 2.7886
+  predicted_saving_ms: 1.662
+  note: >
+    Optimal for B=1 T>=512. At T<128, all-sequential is faster on this
+    hardware. A workload-aware runtime could switch graphs by sequence length.

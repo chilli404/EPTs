@@ -1,0 +1,41 @@
+run_name: scale7b_poly_extended
+wandb_project: execution-polymorphism
+
+model:
+  vocab_size: 8192
+  n_layer: 32
+  d_model: 4096
+  n_head: 32
+  ctx_len: 1024
+  execution_mode: sequential
+
+batch_seqs: 8
+
+train:
+  steps: 500000
+  matrix_lr: 0.0003
+  embed_lr: 0.002
+  weight_decay: 0.0
+  warmdown_frac: 0.3
+  bf16_params: true
+
+data:
+  tokenizer_dir: data/climbmix/bpe8192
+  shard_dir: data/climbmix/bpe8192/shards_10b
+  max_tokens: 10_000_000_000
+
+probes:
+  battery_path: data/probes/v1/battery.jsonl
+  every: 2000
+  dense_until: 50
+  batch_size: 16
+
+execution_training:
+  enabled: true
+  parallel_weight: 0.5
+  consistency_weight: 0.1
+  memory_efficient: true
+
+checkpointing:
+  ckpt_every: 5000
+  dense_windows: []

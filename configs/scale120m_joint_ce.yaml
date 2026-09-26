@@ -1,0 +1,39 @@
+run_name: scale120m_joint_ce
+wandb_project: execution-polymorphism
+
+model:
+  vocab_size: 8192
+  n_layer: 12
+  d_model: 704
+  n_head: 8
+  ctx_len: 1024
+  execution_mode: sequential
+
+batch_seqs: 16
+
+train:
+  steps: 3500
+  matrix_lr: 0.005
+  embed_lr: 0.02
+  weight_decay: 0.0
+  warmdown_frac: 0.3
+
+data:
+  tokenizer_dir: data/climbmix/bpe8192
+  shard_dir: data/climbmix/bpe8192/shards
+  max_tokens: 57_500_000
+
+probes:
+  battery_path: data/probes/v1/battery.jsonl
+  every: 250
+  dense_until: 0
+  batch_size: 128
+
+execution_training:
+  enabled: true
+  parallel_weight: 0.5
+  consistency_weight: 0.0
+
+checkpointing:
+  ckpt_every: 3500
+  dense_windows: []

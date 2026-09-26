@@ -1,0 +1,35 @@
+wandb_project: execution-polymorphism
+model:
+  vocab_size: 8192
+  n_layer: 28
+  d_model: 1536
+  n_head: 24
+  ctx_len: 1024
+  execution_mode: sequential
+batch_seqs: 16
+train:
+  bf16_params: true
+  steps: 12000
+  matrix_lr: 0.0015
+  embed_lr: 0.008
+  weight_decay: 0.0
+  warmdown_frac: 0.3
+data:
+  tokenizer_dir: data/climbmix/bpe8192
+  shard_dir: data/climbmix/bpe8192/shards
+  max_tokens: 100000000
+probes:
+  battery_path: data/probes/v1/battery.jsonl
+  every: 500
+  dense_until: 50
+  batch_size: 32
+checkpointing:
+  ckpt_every: 3000
+  dense_windows: []
+run_name: pareto_1b_symmetrickl_t1_cw0p1
+execution_training:
+  enabled: true
+  parallel_weight: 0.5
+  consistency_weight: 0.1
+  memory_efficient: true
+  consistency_type: symmetric_kl

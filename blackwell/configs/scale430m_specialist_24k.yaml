@@ -1,0 +1,29 @@
+batch_seqs: 8
+checkpointing:
+  ckpt_every: 12000
+  dense_windows: []
+data:
+  max_tokens: 200000000
+  shard_dir: data/climbmix/bpe8192/shards
+  tokenizer_dir: data/climbmix/bpe8192
+model:
+  ctx_len: 1024
+  d_model: 1152
+  execution_mode: sequential
+  n_head: 18
+  n_layer: 20
+  vocab_size: 8192
+probes:
+  batch_size: 64
+  battery_path: data/probes/v1/battery.jsonl
+  dense_until: 50
+  every: 500
+run_name: scale430m_sequential_specialist_24k
+seed: 42
+train:
+  embed_lr: 0.01
+  matrix_lr: 0.002
+  steps: 24000
+  warmdown_frac: 0.3
+  weight_decay: 0.0
+wandb_project: execution-polymorphism

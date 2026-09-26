@@ -1,0 +1,40 @@
+batch_seqs: 16
+checkpointing:
+  ckpt_every: 3500
+  dense_windows: []
+data:
+  max_tokens: 57500000
+  shard_dir: data/climbmix/bpe8192/shards
+  tokenizer_dir: data/climbmix/bpe8192
+execution_training:
+  enabled: true
+  gradnorm_rho: 0.2
+  mode_probabilities:
+    attn_only: 0.075
+    ffn_only: 0.075
+    parallel: 0.3
+    reverse: 0.15
+    sequential: 0.3
+    skip: 0.1
+  strategy: random_mask_6mode
+model:
+  ctx_len: 1024
+  d_model: 704
+  execution_mode: sequential
+  n_head: 8
+  n_layer: 12
+  vocab_size: 8192
+probes:
+  batch_size: 128
+  battery_path: data/probes/v1/battery.jsonl
+  dense_until: 0
+  every: 250
+run_name: scale120m_6mode_gradnorm_7k
+seed: 42
+train:
+  embed_lr: 0.02
+  matrix_lr: 0.005
+  steps: 7000
+  warmdown_frac: 0.3
+  weight_decay: 0.0
+wandb_project: execution-polymorphism
