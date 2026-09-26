@@ -43,7 +43,7 @@ def main():
                              "pattern matching silently mixed measurements "
                              "from different checkpoints sharing a scale "
                              "name, e.g. 430m_6mode_lt vs 430m_6mode_ramp)")
-    parser.add_argument("--results_dir", default="blackwell/results")
+    parser.add_argument("--results_dir", default="results/six_mode")
     parser.add_argument("--bpb_floor", type=float, default=None,
                         help="only keep masks with real bpb_degradation <= this")
     parser.add_argument("--output")

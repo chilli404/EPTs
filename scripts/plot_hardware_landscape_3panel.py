@@ -15,11 +15,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import gaussian_kde
 
-CORPUS = "blackwell/results/6mode_masks_1b_gradnorm_cap10_24k.json"
+CORPUS = "results/six_mode/6mode_masks_1b_gradnorm_cap10_24k.json"
 BENCH_FILES = {
-    "Blackwell": "blackwell/results/6mode_latency_1b_gradnorm_cap10_24k_blackwell.json",
-    "H100": "blackwell/results/remote_gpu_comparison/6mode_latency_1b_gradnorm_cap10_24k_h100.json",
-    "L40S": "blackwell/results/remote_gpu_comparison/6mode_latency_1b_gradnorm_cap10_24k_l40s.json",
+    "Blackwell": "results/six_mode/latency/6mode_latency_1b_gradnorm_cap10_24k_blackwell.json",
+    "H100": "results/six_mode/latency/6mode_latency_1b_gradnorm_cap10_24k_h100.json",
+    "L40S": "results/six_mode/latency/6mode_latency_1b_gradnorm_cap10_24k_l40s.json",
 }
 PANEL_LABELS = ["(a)", "(b)", "(c)"]
 N_LAYERS = 28
@@ -100,6 +100,6 @@ for i, (platform, bench_path) in enumerate(BENCH_FILES.items()):
 fig.suptitle("Speed/accuracy landscape across hardware, 1B primary",
              fontsize=FONT_TITLE + 2, y=1.02)
 fig.tight_layout()
-fig.savefig("blackwell/results/plots/landscape_final_3panel_1b_bigfont.png",
+fig.savefig("results/six_mode/plots/landscape_final_3panel_1b_bigfont.png",
            dpi=200, bbox_inches="tight")
-print("saved blackwell/results/plots/landscape_final_3panel_1b_bigfont.png")
+print("saved results/six_mode/plots/landscape_final_3panel_1b_bigfont.png")

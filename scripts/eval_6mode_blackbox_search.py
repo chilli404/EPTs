@@ -388,15 +388,15 @@ def main():
                              "measurement. Ignored if --surrogate_filter is "
                              "not set.")
     parser.add_argument("--surrogate_uniform_json",
-                        default="blackwell/results/6mode_masks_430m_gradnorm.json",
+                        default="results/six_mode/6mode_masks_430m_gradnorm.json",
                         help="uniform-random mask corpus used to fit the "
                              "--surrogate_filter cost model (field 'rows', "
                              "each with 'mask'+'delta_bpb'). Ignored if "
                              "--surrogate_filter is not set.")
     parser.add_argument("--surrogate_structured_jsons",
-                        default="blackwell/results/6mode_hillclimb_430m_gradnorm_12k_floor005.json,"
-                                "blackwell/results/greedy_430m_gradnorm_12k_budget05_real.json,"
-                                "blackwell/results/m2m3_greedy_430m_gradnorm_12k_budget05_real.json",
+                        default="results/six_mode/6mode_hillclimb_430m_gradnorm_12k_floor005.json,"
+                                "results/six_mode/greedy_430m_gradnorm_12k_budget05_real.json,"
+                                "results/six_mode/m2m3_greedy_430m_gradnorm_12k_budget05_real.json",
                         help="comma-separated structured (hill-climb/greedy) "
                              "real-eval JSONs used to enrich the "
                              "--surrogate_filter cost model fit (field "

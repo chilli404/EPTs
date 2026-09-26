@@ -129,7 +129,7 @@ def main():
     parser.add_argument("--checkpoint", default=None,
                         help="exact source checkpoint path -- files whose "
                              "recorded checkpoint differs are excluded")
-    parser.add_argument("--results_dir", default="blackwell/results")
+    parser.add_argument("--results_dir", default="results/six_mode")
     parser.add_argument("--output", required=True)
     parser.add_argument("--test_frac", type=float, default=0.2)
     parser.add_argument("--seed", type=int, default=0)
