@@ -17,7 +17,7 @@ binary results.
 Usage:
   python scripts/eval_6mode_masks.py \
       --ckpt .../430m_6mode_even_cw100/ckpts/step012000.safetensors \
-      --config blackwell/configs/scale430m_6mode_even_cw100.yaml \
+      --config configs/scale430m_6mode_even_cw100.yaml \
       --val_shards data/climbmix/bpe8192/shards \
       --tokenizer_dir data/climbmix/bpe8192 \
       --n_masks 3000 --output blackwell/results/6mode_masks_430m.json

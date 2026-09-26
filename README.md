@@ -55,12 +55,9 @@ src/fogen/
   hf_model.py             Hugging Face AutoModel interface
   evals/                  BPB evaluation and forced-choice scoring
 
-configs/                  120M training and ablation configs
+configs/                  Training and ablation configs, 120M through 7B scale
   pareto/                 430M and 1B loss-objective sweep configs
                           Naming: {scale}_{objective}_{temperature}_cw{weight}
-
-blackwell/                Scale-up experiments (430M–7B)
-  configs/                Training configs for 430M, 1B, 3B, 7B, Llama variants
 
 scripts/                  Evaluation, analysis, and export tools that produced
                           the paper's cited results (pruned to only these)

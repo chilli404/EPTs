@@ -10,7 +10,7 @@ on data it wasn't (even implicitly) selected against.
 Usage:
   python scripts/eval_disjoint_windows.py \
       --ckpt .../1b_6mode_gradnorm_cap10/ckpts/step024000.safetensors \
-      --config blackwell/configs/scale1b_6mode_losstarget.yaml \
+      --config configs/scale1b_6mode_losstarget.yaml \
       --val_shards data/climbmix/bpe8192/shards --tokenizer_dir data/climbmix/bpe8192 \
       --masks_json /tmp/confound5_winners.json \
       --window_offset 64 --max_windows 64 \

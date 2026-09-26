@@ -22,7 +22,7 @@ Usage:
       --surrogate blackwell/results/6mode_surrogate_430m_v2.pkl \
       --bpb_floor 0.02 --batch_size 24 \
       --ckpt .../430m_6mode_lt/ckpts/step012000.safetensors \
-      --config blackwell/configs/scale430m_6mode_losstarget.yaml \
+      --config configs/scale430m_6mode_losstarget.yaml \
       --val_shards data/climbmix/bpe8192/shards --tokenizer_dir data/climbmix/bpe8192 \
       --output blackwell/results/6mode_active_loop_430m.json
 """

@@ -24,7 +24,7 @@ bpb/latency, the same discipline eval_graph_rewrites.py uses for binary.
 Usage:
   python scripts/eval_6mode_compiler.py \
       --ckpt .../1b_6mode_lt_sym/ckpts/step012000.safetensors \
-      --config blackwell/configs/scale1b_6mode_losstarget.yaml \
+      --config configs/scale1b_6mode_losstarget.yaml \
       --val_shards data/climbmix/bpe8192/shards \
       --tokenizer_dir data/climbmix/bpe8192 \
       --probes_json blackwell/results/6mode_masks_1b_lt_sym.json \

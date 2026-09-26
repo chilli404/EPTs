@@ -8,7 +8,7 @@ eval_ternary_latency.py checks it for ternary.
 Usage:
   python scripts/eval_6mode_latency.py \
       --ckpt /mnt/mldata/checkpoints/execution_graph_transformers/1b_6mode_lt_sym/ckpts/step012000.safetensors \
-      --config blackwell/configs/scale1b_6mode_losstarget.yaml \
+      --config configs/scale1b_6mode_losstarget.yaml \
       --val_shards data/climbmix/bpe8192/shards \
       --tokenizer_dir data/climbmix/bpe8192 \
       --output blackwell/results/6mode_latency_1b_lt_sym.json

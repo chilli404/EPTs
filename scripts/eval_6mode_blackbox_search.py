@@ -14,7 +14,7 @@ mediates the decision -- every step is a real GPU measurement.
 Usage:
   python scripts/eval_6mode_blackbox_search.py \
       --ckpt .../430m_6mode_lt/ckpts/step012000.safetensors \
-      --config blackwell/configs/scale430m_6mode_losstarget.yaml \
+      --config configs/scale430m_6mode_losstarget.yaml \
       --val_shards data/climbmix/bpe8192/shards --tokenizer_dir data/climbmix/bpe8192 \
       --agreement_floor 0.75 --n_restarts 3 --steps_per_restart 15 \
       --output blackwell/results/6mode_blackbox_430m.json

@@ -23,7 +23,7 @@ Usage:
     PYTHONPATH=src python scripts/eval_composition_holdout.py \
         --graph_data blackwell/results/430m_poly_graphs.json \
         --ckpt runs/430m_poly_full/ckpts/step012000.safetensors \
-        --config blackwell/configs/scale430m_poly_full.yaml \
+        --config configs/scale430m_poly_full.yaml \
         --val_shards data/climbmix/bpe8192/shards \
         --tokenizer_dir data/climbmix/bpe8192 \
         --n_random 10000 \

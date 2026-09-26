@@ -9,7 +9,7 @@ Also measures these separately for KL consistency to explain the KL failure.
 Usage:
   python scripts/measure_gradient_ratio.py \
       --ckpt runs/430m_poly_full/ckpts/step012000.safetensors \
-      --config blackwell/configs/scale430m_poly_full.yaml \
+      --config configs/scale430m_poly_full.yaml \
       --val_shards data/climbmix/bpe8192/shards \
       --tokenizer_dir data/climbmix/bpe8192 \
       --output results/gradient_ratio_430m.json
@@ -17,7 +17,7 @@ Usage:
   # Or measure at multiple checkpoints during training:
   python scripts/measure_gradient_ratio.py \
       --ckpt_dir runs/430m_poly_full/ckpts \
-      --config blackwell/configs/scale430m_poly_full.yaml \
+      --config configs/scale430m_poly_full.yaml \
       --val_shards data/climbmix/bpe8192/shards \
       --tokenizer_dir data/climbmix/bpe8192 \
       --output results/gradient_ratios_430m_over_training.json
